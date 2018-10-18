@@ -35,7 +35,6 @@ contract Efirica {
 
     address public admin = msg.sender;
     uint256 public totalDeposits = 0;
-    uint256 public currentPercents = 500; // 5%
     mapping(address => uint256) public deposits;
     mapping(address => uint256) public joinedAt;
     mapping(address => uint256) public updatedAt;
@@ -59,7 +58,6 @@ contract Efirica {
             }
             msg.sender.transfer(dividends);
             updatedAt[msg.sender] = now; // solium-disable-line security/no-block-members
-            currentPercents = generalPercents();
             emit DividendPayed(msg.sender, dividends);
         }
 
@@ -125,16 +123,16 @@ contract Efirica {
     }
 
     function generalPercents() public view returns(uint256) {
+        uint256 health = healthPercents();
+        if (health >= ONE_HUNDRED_PERCENTS.mul(80).div(100)) { // health >= 80%
+            return HIGHEST_DIVIDEND_PERCENTS;
+        }
+
         // From 5% to 0.5% with 0.1% step (45 steps) while health drops from 100% to 0% 
         uint256 percents = LOWEST_DIVIDEND_PERCENTS.add(
             HIGHEST_DIVIDEND_PERCENTS.sub(LOWEST_DIVIDEND_PERCENTS)
-                .mul(healthPercents().mul(45).div(ONE_HUNDRED_PERCENTS)).div(45)
+                .mul(healthPercents().mul(45).div(ONE_HUNDRED_PERCENTS.mul(80).div(100))).div(45)
         );
-
-        // Percents should never increase
-        if (percents > currentPercents) {
-            percents = currentPercents;
-        }
 
         return percents;
     }

@@ -55,13 +55,13 @@ contract('Efirica', function ([_, wallet1, wallet2, wallet3, wallet4, wallet5]) 
     describe('referral', function () {
         it('should receive increased dividends', async function () {
             await this.efirica.sendTransaction({ value: ether(1), from: wallet1 });
-            (await this.efirica.percentsForUser.call(wallet1)).should.be.bignumber.equal(490);
+            (await this.efirica.percentsForUser.call(wallet1)).should.be.bignumber.equal(500);
 
             await time.increaseTo(this.startTime + time.duration.days(1) + time.duration.seconds(1));
 
             await this.efirica.sendTransaction({ value: ether(1), data: wallet1, from: wallet2 });
-            (await this.efirica.percentsForUser.call(wallet1)).should.be.bignumber.equal(480);
-            (await this.efirica.percentsForUser.call(wallet2)).should.be.bignumber.equal(528);
+            (await this.efirica.percentsForUser.call(wallet1)).should.be.bignumber.equal(500);
+            (await this.efirica.percentsForUser.call(wallet2)).should.be.bignumber.equal(550);
 
             await time.increaseTo(this.startTime + time.duration.days(2) + time.duration.seconds(1));
 
@@ -71,7 +71,7 @@ contract('Efirica', function ([_, wallet1, wallet2, wallet3, wallet4, wallet5]) 
             const fee = (new BigNumber(receipt.gasUsed)).mul(new BigNumber(web3.eth.gasPrice));
 
             const dividends = balance.sub(preBalance.sub(fee)).toNumber();
-            dividends.should.be.closeTo(ether(1).mul(528).div(10000).toNumber(), ether(1).div(1000000).toNumber());
+            dividends.should.be.closeTo(ether(1).mul(550).div(10000).toNumber(), ether(1).div(1000000).toNumber());
         });
 
         it('should not pay to first referral until 1 day', async function () {
@@ -148,7 +148,7 @@ contract('Efirica', function ([_, wallet1, wallet2, wallet3, wallet4, wallet5]) 
             const fee = (new BigNumber(receipt.gasUsed)).mul(new BigNumber(web3.eth.gasPrice));
 
             const dividends = balance.sub(preBalance.sub(fee)).toNumber();
-            dividends.should.be.closeTo(ether(1).mul(49).div(1000).toNumber(), ether(1).div(1000000).toNumber());
+            dividends.should.be.closeTo(ether(1).mul(50).div(1000).toNumber(), ether(1).div(1000000).toNumber());
         });
 
         it('should work after deposit and 1 hour wait', async function () {
@@ -162,7 +162,7 @@ contract('Efirica', function ([_, wallet1, wallet2, wallet3, wallet4, wallet5]) 
             const fee = (new BigNumber(receipt.gasUsed)).mul(new BigNumber(web3.eth.gasPrice));
 
             const dividends = balance.sub(preBalance.sub(fee)).toNumber();
-            dividends.should.be.closeTo(ether(1).div(24).mul(49).div(1000).toNumber(), ether(1).div(1000000).toNumber());
+            dividends.should.be.closeTo(ether(1).div(24).mul(50).div(1000).toNumber(), ether(1).div(1000000).toNumber());
         });
 
         it('should work after deposit and 1 min wait', async function () {
@@ -176,7 +176,7 @@ contract('Efirica', function ([_, wallet1, wallet2, wallet3, wallet4, wallet5]) 
             const fee = (new BigNumber(receipt.gasUsed)).mul(new BigNumber(web3.eth.gasPrice));
 
             const dividends = balance.sub(preBalance.sub(fee)).toNumber();
-            dividends.should.be.closeTo(ether(1).div(24 * 60).mul(49).div(1000).toNumber(), ether(1).div(1000000).toNumber());
+            dividends.should.be.closeTo(ether(1).div(24 * 60).mul(50).div(1000).toNumber(), ether(1).div(1000000).toNumber());
         });
 
         it('should work after deposit and 5 day wait', async function () {
@@ -190,7 +190,7 @@ contract('Efirica', function ([_, wallet1, wallet2, wallet3, wallet4, wallet5]) 
             const fee = (new BigNumber(receipt.gasUsed)).mul(new BigNumber(web3.eth.gasPrice));
 
             const dividends = balance.sub(preBalance.sub(fee)).toNumber();
-            dividends.should.be.closeTo(ether(1).mul(5).mul(49).div(1000).toNumber(), ether(1).div(1000000).toNumber());
+            dividends.should.be.closeTo(ether(1).mul(5).mul(50).div(1000).toNumber(), ether(1).div(1000000).toNumber());
         });
     });
 
