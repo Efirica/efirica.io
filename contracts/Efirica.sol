@@ -33,6 +33,7 @@ contract Efirica {
     uint256 constant public HIGHEST_DIVIDEND_PERCENTS = 500; // 5.00%
     uint256[] /*constant*/ public referralPercents = [500, 300, 200]; // 5%, 3%, 2%
 
+    bool public running = true;
     address public admin = msg.sender;
     uint256 public totalDeposits = 0;
     mapping(address => uint256) public deposits;
@@ -50,11 +51,14 @@ contract Efirica {
     event BalanceChanged(uint256 balance);
     
     function() public payable {
+        require(running, "Project is not running");
+
         // Dividends
         uint256 dividends = dividendsForUser(msg.sender);
         if (dividends > 0) {
             if (dividends > address(this).balance) {
                 dividends = address(this).balance;
+                running = false;
             }
             msg.sender.transfer(dividends);
             updatedAt[msg.sender] = now; // solium-disable-line security/no-block-members
