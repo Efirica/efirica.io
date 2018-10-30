@@ -29,8 +29,9 @@ contract Efirica {
     using SafeMath for uint256;
 
     uint256 constant public ONE_HUNDRED_PERCENTS = 10000;
-    uint256 constant public LOWEST_DIVIDEND_PERCENTS = 50; // 0.50%
-    uint256 constant public HIGHEST_DIVIDEND_PERCENTS = 500; // 5.00%
+    uint256 constant public LOWEST_DIVIDEND_PERCENTS = 50;            // 0.50%
+    uint256 constant public HIGHEST_DIVIDEND_PERCENTS = 500;          // 5.00%
+    uint256 constant public REFERRAL_ACTIVATION_TIME = 1 days;
     uint256[] /*constant*/ public referralPercents = [500, 300, 200]; // 5%, 3%, 2%
 
     bool public running = true;
@@ -61,17 +62,17 @@ contract Efirica {
                 running = false;
             }
             msg.sender.transfer(dividends);
-            updatedAt[msg.sender] = now; // solium-disable-line security/no-block-members
+            updatedAt[msg.sender] = now;
             emit DividendPayed(msg.sender, dividends);
         }
 
         // Deposit
         if (msg.value > 0) {
             if (deposits[msg.sender] == 0) {
-                joinedAt[msg.sender] = now; // solium-disable-line security/no-block-members
+                joinedAt[msg.sender] = now;
                 emit InvestorAdded(msg.sender);
             }
-            updatedAt[msg.sender] = now; // solium-disable-line security/no-block-members
+            updatedAt[msg.sender] = now;
             deposits[msg.sender] = deposits[msg.sender].add(msg.value);
             emit DepositAdded(msg.sender, deposits[msg.sender], msg.value);
 
@@ -81,7 +82,7 @@ contract Efirica {
             // Add referral if possible
             if (referrers[msg.sender] == address(0) && msg.data.length == 20) {
                 address referrer = bytesToAddress(msg.data);
-                if (referrer != address(0) && deposits[referrer] > 0 && now >= joinedAt[referrer].add(1 days)) { // solium-disable-line security/no-block-members
+                if (referrer != address(0) && deposits[referrer] > 0 && now >= joinedAt[referrer].add(REFERRAL_ACTIVATION_TIME)) {
                     referrers[msg.sender] = referrer;
                     emit ReferrerAdded(msg.sender, referrer);
                 }
