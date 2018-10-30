@@ -49,7 +49,7 @@ contract Efirica {
     event ReferrerAdded(address indexed investor, address indexed referrer);
     event DepositAdded(address indexed investor, uint256 deposit, uint256 amount);
     event DividendPayed(address indexed investor, uint256 dividend);
-    event ReferrerPayed(address indexed investor, address referrer, uint256 amount);
+    event ReferrerPayed(address indexed investor, uint256 indexed level, address referrer, uint256 amount);
     event AdminFeePayed(address indexed investor, uint256 amount);
     event TotalDepositsChanged(uint256 totalDeposits);
     event BalanceChanged(uint256 balance);
@@ -99,7 +99,7 @@ contract Efirica {
                 uint256 refAmount = msg.value.mul(referralPercents[i]).div(ONE_HUNDRED_PERCENTS);
                 referrer.send(refAmount); // solium-disable-line security/no-send
                 refEarned[referrer] = refEarned[referrer].add(refAmount);
-                emit ReferrerPayed(msg.sender, referrer, refAmount);
+                emit ReferrerPayed(msg.sender, i, referrer, refAmount);
                 referrer = referrers[referrer];
             }
 
