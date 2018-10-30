@@ -45,12 +45,12 @@ contract Efirica {
     mapping(address => uint256) public refCount;
     mapping(address => uint256) public refEarned;
 
-    event InvestorAdded(address investor);
-    event ReferrerAdded(address investor, address referrer);
-    event DepositAdded(address investor, uint256 deposit, uint256 amount);
-    event DividendPayed(address investor, uint256 dividend);
-    event ReferrerPayed(address investor, address referrer, uint256 amount);
-    event AdminFeePayed(address investor, uint256 amount);
+    event InvestorAdded(address indexed investor);
+    event ReferrerAdded(address indexed investor, address indexed referrer);
+    event DepositAdded(address indexed investor, uint256 deposit, uint256 amount);
+    event DividendPayed(address indexed investor, uint256 dividend);
+    event ReferrerPayed(address indexed investor, address referrer, uint256 amount);
+    event AdminFeePayed(address indexed investor, uint256 amount);
     event TotalDepositsChanged(uint256 totalDeposits);
     event BalanceChanged(uint256 balance);
     
