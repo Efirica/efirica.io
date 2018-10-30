@@ -38,6 +38,7 @@ contract Efirica {
     address public admin = msg.sender;
     uint256 public totalDeposits = 0;
     mapping(address => uint256) public deposits;
+    mapping(address => uint256) public withdrawals;
     mapping(address => uint256) public joinedAt;
     mapping(address => uint256) public updatedAt;
     mapping(address => address) public referrers;
@@ -62,6 +63,7 @@ contract Efirica {
                 running = false;
             }
             msg.sender.transfer(dividends);
+            withdrawals[msg.sender] = withdrawals[msg.sender].add(dividends);
             updatedAt[msg.sender] = now;
             emit DividendPayed(msg.sender, dividends);
         }
