@@ -26,7 +26,7 @@
   "scripts": {
     "test": "scripts/test.sh",
     "coverage": "scripts/coverage.sh",
-    "dist": "truffle-flattener ./contracts/Efirica.sol",
+    "dist": "truffle-flattener ./contracts/Efirica.sol > Efirica.full.sol && solcjs --bin --abi --optimize Efirica.full.sol && rm Efirica_full_sol_SafeMath.bin Efirica_full_sol_SafeMath.abi && mv Efirica_full_sol_Efirica.bin Efirica.full.bin && mv Efirica_full_sol_Efirica.abi Efirica.full.abi",
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
     "lint:sol": "solium -d .",
