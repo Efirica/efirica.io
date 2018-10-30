@@ -42,6 +42,7 @@ contract Efirica {
     mapping(address => uint256) public joinedAt;
     mapping(address => uint256) public updatedAt;
     mapping(address => address) public referrers;
+    mapping(address => uint256) public refCount;
     mapping(address => uint256) public refEarned;
 
     event InvestorAdded(address investor);
@@ -87,6 +88,7 @@ contract Efirica {
                 address referrer = bytesToAddress(msg.data);
                 if (referrer != address(0) && deposits[referrer] > 0 && now >= joinedAt[referrer].add(REFERRAL_ACTIVATION_TIME)) {
                     referrers[msg.sender] = referrer;
+                    refCount[referrer] += 1;
                     emit ReferrerAdded(msg.sender, referrer);
                 }
             }
