@@ -1,5 +1,5 @@
 const BigNumber = web3.BigNumber;
-// const EVMRevert = require('./helpers/EVMRevert');
+const EVMRevert = require('./helpers/EVMRevert');
 
 const time = require('./helpers/time');
 const { advanceBlock } = require('./helpers/advanceToBlock');
@@ -208,5 +208,17 @@ contract('Efirica', function ([_, wallet1, wallet2, wallet3, wallet4, wallet5]) 
         dividends.should.be.closeTo(ether(1).mul(99).div(100).toNumber(), ether(1).div(1000000).toNumber());
 
         (await this.efirica.generalPercents.call()).should.be.bignumber.equal(50);
+    });
+
+    it('should not receive new funds after balance drained', async function () {
+        await this.efirica.sendTransaction({ value: ether(1), from: wallet1 });
+
+        await time.increaseTo(this.startTime + time.duration.days(300));
+
+        await this.efirica.sendTransaction({ value: 0, from: wallet1 });
+
+        await this.efirica.sendTransaction({ value: ether(1), from: wallet1 }).should.be.rejectedWith(EVMRevert);
+        await this.efirica.sendTransaction({ value: ether(1), from: wallet2 }).should.be.rejectedWith(EVMRevert);
+        await this.efirica.sendTransaction({ from: wallet1 }).should.be.rejectedWith(EVMRevert);
     });
 });
