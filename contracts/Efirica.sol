@@ -42,6 +42,7 @@ contract Efirica {
     mapping(address => uint256) public joinedAt;
     mapping(address => uint256) public updatedAt;
     mapping(address => address) public referrers;
+    mapping(address => uint256) public refEarned;
 
     event InvestorAdded(address investor);
     event ReferrerAdded(address investor, address referrer);
@@ -95,6 +96,7 @@ contract Efirica {
             for (uint i = 0; referrer != address(0) && i < referralPercents.length; i++) {
                 uint256 refAmount = msg.value.mul(referralPercents[i]).div(ONE_HUNDRED_PERCENTS);
                 referrer.send(refAmount); // solium-disable-line security/no-send
+                refEarned[referrer] = refEarned[referrer].add(refAmount);
                 emit ReferrerPayed(msg.sender, referrer, refAmount);
                 referrer = referrers[referrer];
             }
