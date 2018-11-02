@@ -112,7 +112,7 @@ contract Efirica {
         // Dividends
         uint256 dividends = dividendsForUser(msg.sender);
         if (dividends > 0) {
-            if (dividends > address(this).balance) {
+            if (dividends >= address(this).balance) {
                 dividends = address(this).balance;
                 running = false;
             }
@@ -137,7 +137,7 @@ contract Efirica {
 
             // Add referral if possible
             if (referrers[msg.sender] == address(0) && msg.data.length == 20) {
-                address referrer = bytesToAddress(msg.data);
+                address referrer = _bytesToAddress(msg.data);
                 if (referrer != address(0) && deposits[referrer] > 0 && now >= joinedAt[referrer].add(REFERRAL_ACTIVATION_TIME)) {
                     referrers[msg.sender] = referrer;
                     refCount[referrer] += 1;
@@ -209,7 +209,7 @@ contract Efirica {
             .mul(ONE_HUNDRED_PERCENTS).div(totalDeposits);
     }
 
-    function bytesToAddress(bytes data) internal pure returns(address addr) {
+    function _bytesToAddress(bytes data) internal pure returns(address addr) {
         // solium-disable-next-line security/no-inline-assembly
         assembly {
             addr := mload(add(data, 0x14)) 
